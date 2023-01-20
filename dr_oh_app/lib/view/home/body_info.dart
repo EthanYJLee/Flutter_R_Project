@@ -15,26 +15,21 @@ class _BodyInfoState extends State<BodyInfo> {
   TextEditingController bpController = TextEditingController();
   bool correctheight = false;
   bool correctweight = false;
+  late double selectedHeight = 150;
+  late double selectedWeight = 75;
 
-  // Desc: 신체정보 입력받는 TextField
-  // Date: 2023-01-11
-  // Widget _typeInfo(dynamic controller, String text) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 100, right: 100),
-  //     child: TextField(
-  //       controller: controller,
-  //       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-  //       decoration: InputDecoration(
-  //         hintText: text,
-  //       ),
-  //       onChanged: (value) {},
-  //     ),
-  //   );
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    heightController.text = selectedHeight.toString();
+    weightController.text = selectedWeight.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(248, 178, 200, 235),
       appBar: AppBar(
         title: const Text('신체정보 입력'),
         elevation: 1,
@@ -45,71 +40,116 @@ class _BodyInfoState extends State<BodyInfo> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
-              children: const [
-                Text(
-                  '신체정보 입력',
-                  style: TextStyle(
-                    fontSize: 40,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 100,
-            ),
-            Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 100, right: 100),
-                  child: TextField(
-                    controller: heightController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      hintText: '키(cm)',
-                      labelText: correctheight ? '' : '키를 입력하세요',
-                    ),
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        setState(() {
-                          correctheight = true;
-                        });
-                      } else {
-                        setState(() {
-                          correctheight = false;
-                        });
-                      }
-                    },
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: Column(
+                    children: [
+                      const Text(
+                        '키를 입력하세요',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      TextField(
+                        controller: heightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: const InputDecoration(
+                          hintText: '키(cm)',
+                        ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            setState(() {
+                              correctheight = true;
+                            });
+                          } else {
+                            setState(() {
+                              correctheight = false;
+                            });
+                          }
+                        },
+                      ),
+                      SliderTheme(
+                        data: const SliderThemeData(
+                          trackHeight: 5,
+                        ),
+                        child: Slider(
+                            value: selectedHeight,
+                            min: 100,
+                            max: 220,
+                            divisions: 120,
+                            activeColor:
+                                const Color.fromARGB(255, 96, 139, 109),
+                            label: selectedHeight.round().toStringAsFixed(0),
+                            onChanged: ((value) {
+                              setState(() {
+                                correctheight = true;
+                                heightController.text = value.toString();
+                                selectedHeight = value.toDouble();
+                              });
+                            })),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                  width: 350,
+                  child: Divider(
+                    thickness: 2,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: Column(
+                    children: [
+                      const Text(
+                        '몸무게를 입력하세요',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      TextField(
+                        controller: weightController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: const InputDecoration(
+                          hintText: '몸무게(kg)',
+                        ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            setState(() {
+                              correctweight = true;
+                            });
+                          } else {
+                            setState(() {
+                              correctweight = false;
+                            });
+                          }
+                        },
+                      ),
+                      SliderTheme(
+                        data: const SliderThemeData(
+                          trackHeight: 5,
+                        ),
+                        child: Slider(
+                            value: selectedWeight,
+                            min: 30,
+                            max: 130,
+                            divisions: 100,
+                            activeColor:
+                                const Color.fromARGB(255, 96, 139, 109),
+                            label: selectedWeight.round().toStringAsFixed(0),
+                            onChanged: ((value) {
+                              setState(() {
+                                correctweight = true;
+                                weightController.text = value.toString();
+                                selectedWeight = value.toDouble();
+                              });
+                            })),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(
                   height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 100, right: 100),
-                  child: TextField(
-                    controller: weightController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      hintText: '몸무게(kg)',
-                      labelText: correctweight ? '' : '몸무게를 입력하세요',
-                    ),
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        setState(() {
-                          correctweight = true;
-                        });
-                      } else {
-                        setState(() {
-                          correctweight = false;
-                        });
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 100,
                 ),
                 ElevatedButton(
                     onPressed: correctheight && correctweight

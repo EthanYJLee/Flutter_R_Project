@@ -60,12 +60,16 @@ class Survey extends StatelessWidget {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20))),
       ),
-      child: Text(
-        title,
-        style: const TextStyle(
-          // fontWeight: FontWeight.bold,
-          fontSize: 30,
-        ),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              // fontWeight: FontWeight.bold,
+              fontSize: 30,
+            ),
+          ),
+        ],
       ),
     );
   } //_btn

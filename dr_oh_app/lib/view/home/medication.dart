@@ -19,29 +19,50 @@ class _MedicationState extends State<Medication> {
   TextEditingController _hospitalController = TextEditingController();
   TextEditingController _diseaseController = TextEditingController();
   TextEditingController _pillController = TextEditingController();
-  late String id = '';
-  late String docId = '';
+  String? _id;
+  String? _docId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+  }
 
   Future<void> _getDocId(String id) async {
     var data = await FirebaseFirestore.instance
         .collection('users')
         .where('id', isEqualTo: id)
         .get();
-    docId = data.docs.first.id;
+    setState(() {
+      _docId = data.docs.first.id;
+      print(_docId);
+    });
   }
 
   _initSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      id = prefs.getString('id').toString();
+      _id = prefs.getString('id')!;
+      print(_id);
     });
-    _getDocId(id);
+    _getDocId(_id!);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initSharedPreferences();
+  Widget _customTextfield(TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: TextField(
+        controller: controller,
+        cursorColor: const Color.fromARGB(255, 254, 97, 30),
+        decoration: InputDecoration(
+          enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          hintText: label,
+        ),
+      ),
+    );
   }
 
   Widget _dateTextfield(dynamic controller, String hint) {
@@ -54,6 +75,10 @@ class _MedicationState extends State<Medication> {
           _showDateRangePickerPop();
         },
         decoration: InputDecoration(
+          enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)),
           hintText: hint,
         ),
       ),
@@ -77,38 +102,33 @@ class _MedicationState extends State<Medication> {
             pill: '',
           );
     return ListTile(
-      title: medication.pill.toString().isNotEmpty
-          ? Row(
+      title: medication.firstDate.toString().isNotEmpty
+          ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    Container(
-                      width: 350,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          style: BorderStyle.solid,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '${medication.firstDate}~${medication.lastDate}\t병원명: ${medication.hospital}\t병명: ${medication.disease}\n처방의약품명: ${medication.pill}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  width: 350,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      style: BorderStyle.solid,
+                      width: 1,
                     ),
-                  ],
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    '${medication.firstDate} ~ ${medication.lastDate}\n병원명: ${medication.hospital}\n병명: ${medication.disease}\n처방의약품명: ${medication.pill}',
+                    style: const TextStyle(fontSize: 20),
+                    textAlign: TextAlign.start,
+                  ),
                 ),
               ],
             )
@@ -129,6 +149,7 @@ class _MedicationState extends State<Medication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(248, 178, 200, 235),
       appBar: AppBar(
         title: const Text('투약이력'),
         elevation: 1,
@@ -141,7 +162,7 @@ class _MedicationState extends State<Medication> {
             StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('users')
-                    .doc(docId)
+                    .doc(_docId)
                     .collection('Medication')
                     .snapshots(),
                 builder: ((context, snapshot) {
@@ -164,60 +185,45 @@ class _MedicationState extends State<Medication> {
                     ],
                   );
                 })),
-            Wrap(
-              direction: Axis.horizontal,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _dateTextfield(_startDateController, '시작일'),
-                    _dateTextfield(_endDateController, '종료일'),
-                  ],
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                controller: _hospitalController,
-                decoration: const InputDecoration(
-                  hintText: '병원명',
-                ),
+            Card(
+              child: Column(
+                children: [
+                  Wrap(
+                    direction: Axis.horizontal,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _dateTextfield(_startDateController, '시작일'),
+                          _dateTextfield(_endDateController, '종료일'),
+                        ],
+                      )
+                    ],
+                  ),
+                  _customTextfield(_hospitalController, '병원명'),
+                  _customTextfield(_diseaseController, '병명'),
+                  _customTextfield(_pillController, '처방의약품명'),
+                  ElevatedButton(
+                    onPressed: () {
+                      MedicationModel medicationModel = MedicationModel(
+                        firstDate: _startDateController.text
+                            .toString()
+                            .substring(0, 10),
+                        lastDate:
+                            _endDateController.text.toString().substring(0, 10),
+                        hospital: _hospitalController.text,
+                        disease: _diseaseController.text,
+                        pill: _pillController.text,
+                      );
+                      MyHistoryViewModel.to
+                          .addMedication(medicationModel, _id!);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('추가'),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                controller: _diseaseController,
-                decoration: const InputDecoration(
-                  hintText: '병명',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                controller: _pillController,
-                decoration: const InputDecoration(
-                  hintText: '처방의약품명',
-                ),
-              ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  MedicationModel medicationModel = MedicationModel(
-                    firstDate:
-                        _startDateController.text.toString().substring(0, 10),
-                    lastDate:
-                        _endDateController.text.toString().substring(0, 10),
-                    hospital: _hospitalController.text,
-                    disease: _diseaseController.text,
-                    pill: _pillController.text,
-                  );
-                  MyHistoryViewModel.to.addMedication(medicationModel, id);
-                  Navigator.pop(context);
-                },
-                child: const Text('추가'))
           ],
         ),
       ),

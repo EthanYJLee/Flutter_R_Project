@@ -34,10 +34,9 @@ class _StrokeChartRecordState extends State<DementiaChartData> {
         actions: const [LogoutBtn()],
       ),
       body: Center(
-        // child: LineChartSample2(doc: null,),
+          // child: LineChartSample2(doc: null,),
 
-        child: _readAction(id)
-      ),
+          child: _readAction(id)),
     );
   }
 
@@ -233,7 +232,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   LineChartData mainData(List list) {
-    
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -292,9 +290,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         LineChartBarData(
           // ******* (x,y)의 좌표 설정하기 *******
           spots: [
-            for(int i=0; i<numList!.length; i++)...[
-            FlSpot(i.toDouble(), double.parse(numList![i].toString())),
-            
+            for (int i = 0; i < numList!.length; i++) ...[
+              FlSpot(i.toDouble(), double.parse(numList![i].toString())),
             ]
             // FlSpot(1, numList![1]),
             // FlSpot(2, numList![2]),
@@ -425,68 +422,64 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ],
     );
   }
-
-
-
-
 }
-   Widget _readAction(String id) {
-    
-   // String date=DateTime.now().toString().substring(0,10);
 
-    // var data = await FirebaseFirestore.instance
-    //   .collection('users')
-    //   .where('id',isEqualTo: id)
-    //   .get();
+Widget _readAction(String id) {
+  // String date=DateTime.now().toString().substring(0,10);
 
-    //   var data1 = await FirebaseFirestore.instance
-    //   .collection('users').doc(data.docs.first.id).collection('dementia_p')
-    //   .get();
+  // var data = await FirebaseFirestore.instance
+  //   .collection('users')
+  //   .where('id',isEqualTo: id)
+  //   .get();
 
-    //   return data1;
+  //   var data1 = await FirebaseFirestore.instance
+  //   .collection('users').doc(data.docs.first.id).collection('dementia_p')
+  //   .get();
 
-    return FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('users')
-      .where('id',isEqualTo: id)
-      .get().then((value) => FirebaseFirestore.instance.collection('users').doc(value.docs.first.id).collection('dementia_p').get()),
-                // .orderBy('date', descending: false)
-              
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final documents = snapshot.data!.docs;
-              return ListView(
-                children:
-                    documents.map((e) => LineChartSample2(doc: e)).toList(),
-              );
-            });
+  //   return data1;
 
-  }// -addAction
+  return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .where('id', isEqualTo: id)
+          .get()
+          .then((value) => FirebaseFirestore.instance
+              .collection('users')
+              .doc(value.docs.first.id)
+              .collection('dementia_p')
+              .get()),
+      // .orderBy('date', descending: false)
 
-  class Dementiaresult{
-    // static Future<DementiaChart> result(String id) async{
-      
-    //     var data = await FirebaseFirestore.instance
-    //   .collection('users')
-    //   .where('id',isEqualTo: id)
-    //   .get();
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final documents = snapshot.data!.docs;
+        return ListView(
+          children: documents.map((e) => LineChartSample2(doc: e)).toList(),
+        );
+      });
+} // -addAction
 
-    //   var data2=FirebaseFirestore.instance
-    //   .collection('users').doc(data.docs.first.id)
-    //   .collection('dementia_p').get();
-    //   return DementiaChart.fromJson(data2.);
-    // }
+class Dementiaresult {
+  // static Future<DementiaChart> result(String id) async{
 
-  //   static StreamBuilder<QuerySnapshot> result(String id) async {     
+  //     var data = await FirebaseFirestore.instance
+  //   .collection('users')
+  //   .where('id',isEqualTo: id)
+  //   .get();
+
+  //   var data2=FirebaseFirestore.instance
+  //   .collection('users').doc(data.docs.first.id)
+  //   .collection('dementia_p').get();
+  //   return DementiaChart.fromJson(data2.);
+  // }
+
+  //   static StreamBuilder<QuerySnapshot> result(String id) async {
   //       // FirebaseFirestore.instance
   //       // .collection('users')
   //       // .where('id',isEqualTo: id)
   //       // .get();
-        
-
-
 
   //   var data = await FirebaseFirestore.instance
   //     .collection('users')
@@ -497,10 +490,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
   //     .collection('users').doc(data.docs.first.id)
   //     .collection('dementia_p').get();
 
-
   //   }
-    
-    
+
   //   }
 
   //    Widget _buildItemWidget(
@@ -512,8 +503,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   // print(dementia.seq);
 
   //   return SingleChildScrollView(
-      
-      
+
   //     child: Card(
   //       child: ListTile(
   //         title: Text('${dementia.seq}. ${dementia.question}'),
@@ -525,4 +515,4 @@ class _LineChartSample2State extends State<LineChartSample2> {
   //   );
   // } //_buildItemWidget
 
-  }
+}

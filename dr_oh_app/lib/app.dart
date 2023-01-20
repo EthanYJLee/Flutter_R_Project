@@ -20,7 +20,7 @@ class App extends GetView<BottomNavController> {
             index: controller.pageIndex.value, // 현재 페이지 확인
             children: const [
               Home(),
-              Survey(),
+              // Survey(),
               Hospital(),
               Information(),
               MyPage(),
@@ -45,11 +45,13 @@ class App extends GetView<BottomNavController> {
                 activeIcon: Icon(Icons.home),
                 label: 'Home',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.content_paste),
-                activeIcon: Icon(Icons.content_paste),
-                label: 'Survey',
-              ),
+              // NavBar Survey 삭제
+              // 2023-01-18
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.content_paste),
+              //   activeIcon: Icon(Icons.content_paste),
+              //   label: 'Survey',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.local_hospital),
                 activeIcon: Icon(Icons.local_hospital),

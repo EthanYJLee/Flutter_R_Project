@@ -27,7 +27,4 @@ class DementiaPredict {
     print(result);
     return result;
   }
-
-
-
 }

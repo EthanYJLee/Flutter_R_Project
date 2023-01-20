@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dr_oh_app/components/logout_btn.dart';
 import 'package:dr_oh_app/model/user.dart';
 import 'package:dr_oh_app/repository/localdata/user_repository.dart';
+import 'package:dr_oh_app/view/home/body_info.dart';
 
 import 'package:dr_oh_app/view/mypage/chart_dementia_test.dart';
 import 'package:dr_oh_app/view/mypage/chart_diabetes.dart';
@@ -12,6 +13,7 @@ import 'package:dr_oh_app/view/mypage/chart_dimentia.dart';
 import 'package:dr_oh_app/view/mypage/dementia_chart_record.dart';
 import 'package:dr_oh_app/view/mypage/diabetes_chart_record.dart';
 import 'package:dr_oh_app/view/mypage/edit_member_info.dart';
+import 'package:dr_oh_app/view/mypage/hos_med_view.dart';
 import 'package:dr_oh_app/view/mypage/sign_out.dart';
 import 'package:dr_oh_app/view/mypage/stroke_chart_record.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +37,7 @@ class _MyPageState extends State<MyPage> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7),
-          color: const Color(0xFF99CD89),
+          color: const Color.fromARGB(255, 239, 173, 115),
         ),
         width: Get.width,
         height: 30,
@@ -50,7 +52,7 @@ class _MyPageState extends State<MyPage> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 16,
                 ),
               ),
             ],
@@ -156,10 +158,19 @@ class _MyPageState extends State<MyPage> {
         children: <Widget>[
           Card(
             elevation: 4,
-            child: Column(
+            child: Row(
               children: <Widget>[
                 // _btnContentActions(
-                //   "즐겨찾기한 병원",
+                //   "신체정보",
+                //   const Icon(
+                //     Icons.person_rounded,
+                //     color: Color(0xFF99CD89),
+                //   ),
+                //   const BodyInfo(),
+                // ),
+                // const Divider(),
+                // _btnContentActions(
+                //   "검진기록 조회",
                 //   const Icon(
                 //     Icons.local_hospital,
                 //     color: Color(0xFF99CD89),
@@ -168,22 +179,26 @@ class _MyPageState extends State<MyPage> {
                 // ),
                 // const Divider(),
                 // _btnContentActions(
-                //   "내가 쓴 글",
+                //   "내원/투약이력 조회",
                 //   const Icon(
-                //     Icons.payment,
+                //     Icons.medication_rounded,
+                //     color: Color(0xFF99CD89),
+                //   ),
+                //   const HosMedView(),
+                // ),
+                // const Divider(),
+                // _btnContentActions(
+                //   "회원 탈퇴",
+                //   const Icon(
+                //     Icons.info_outline,
                 //     color: Color(0xFF99CD89),
                 //   ),
                 //   const SignOut(),
                 // ),
-                // const Divider(),
-                _btnContentActions(
-                  "회원 탈퇴",
-                  const Icon(
-                    Icons.info_outline,
-                    color: Color(0xFF99CD89),
-                  ),
-                  const SignOut(),
-                ),
+                _gridCard(Icons.person_rounded, '신체정보', const BodyInfo()),
+                _gridCard(Icons.local_hospital, '검진기록', const HosMedView()),
+                _gridCard(Icons.medication, '내원/투약이력', const HosMedView()),
+                // _gridCard(Icons.person_rounded, '신체정보', BodyInfo()),
               ],
             ),
           ),
@@ -293,9 +308,36 @@ class _MyPageState extends State<MyPage> {
     _initSharedPreferences();
   }
 
+  // Desc: 목록 보기 편하도록 카드로 바꿈
+  // Date: 2023-01-17
+  Widget _gridCard(dynamic icon, String title, dynamic path) {
+    return InkWell(
+      onTap: () {
+        Get.to(path);
+      },
+      child: Card(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// ---------------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(175, 105, 152, 234),
       appBar: AppBar(
         centerTitle: true,
         title: const Text('MY PAGE'),
@@ -305,10 +347,10 @@ class _MyPageState extends State<MyPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             _head('기본정보'),
-            const SizedBox(height: 3),
-            Container(
+            const SizedBox(height: 5),
+            SizedBox(
               height: 200,
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -324,32 +366,77 @@ class _MyPageState extends State<MyPage> {
                   final documents = snapshot.data!.docs;
 
                   return ListView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: documents.map((e) => _getMemberInfo(e)).toList(),
                   );
                 }),
               ),
             ),
-            const SizedBox(height: 30),
-            _head('추가정보'),
-            _additionalInfo(),
-            const SizedBox(height: 30),
+            // const SizedBox(height: 30),
+            // _head('추가정보'),
+            // _additionalInfo(),
+            const SizedBox(height: 10),
+
+            _head('검진결과 분석'),
+            // const SizedBox(height: 3),
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                height: 100,
+                // width: 500,
+                child: GridView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4),
+                  children: [
+                    _gridCard(Icons.bar_chart, '당뇨병 차트', const ChartDiabetes()),
+                    _gridCard(
+                        Icons.area_chart, '뇌졸중 차트', const StrokeChartRecord()),
+                    _gridCard(
+                        Icons.pie_chart, '치매 차트', const DementiaChartRecord()),
+                    _gridCard(Icons.person_add_alt_1_outlined, 'BMI 차트',
+                        const BmiChartRecord()),
+                  ],
+                )),
             _head('사용자정보'),
-            _userInfo(),
-            const SizedBox(height: 30),
+            // _userInfo(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 27),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 120,
+                      width: 350,
+                      child: GridView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3),
+                        children: [
+                          _gridCard(
+                              Icons.person_rounded, '신체정보', const BodyInfo()),
+                          _gridCard(
+                              Icons.local_hospital, '검진기록', const HosMedView()),
+                          _gridCard(
+                              Icons.medication, '내원/투약이력', const HosMedView()),
+                        ],
+                      )),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
             const Text(
               "Dr. Oh",
               style: TextStyle(
-                  color: Color(0xFF99CD89),
+                  color: Color.fromARGB(255, 239, 146, 65),
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 3),
             const Text(
               "Version 0.0.1",
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.grey,
+                color: Color.fromARGB(176, 156, 77, 51),
               ),
             ),
             const SizedBox(

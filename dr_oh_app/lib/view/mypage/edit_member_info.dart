@@ -35,7 +35,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
 // Desc: 기존 정보 (Text Field 상의)
 // Date: 2023-01-10
 
-  late String id = '';
+  String? _id;
 
   late String atSign = '@';
 
@@ -254,7 +254,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
   _initSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      id = (prefs.getString('id') ?? "");
+      _id = (prefs.getString('id') ?? "");
     });
   }
 
@@ -280,6 +280,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Color.fromARGB(253, 148, 183, 243),
         appBar: AppBar(
           centerTitle: true,
           title: const Text('회원정보 수정'),
@@ -314,7 +315,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
                       StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection('users')
-                            .where('id', isEqualTo: id)
+                            .where('id', isEqualTo: _id)
                             .snapshots(),
                         builder: ((context, snapshot) {
                           if (!snapshot.hasData) {
@@ -329,10 +330,11 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
                               name: e['name'],
                               id: e['id'],
                               birthdate: e['birthdate'],
-                              email: e['email']
-                                  .substring(0, e['email'].indexOf('@')),
+                              email: e['email'].toString().substring(
+                                  0, e['email'].toString().indexOf('@')),
                             );
                             return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _joinText(
                                     '이름', _editName(user.name.toString())),
@@ -355,7 +357,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
+                  padding: const EdgeInsets.only(top: 30.0),
                   child: ElevatedButton(
                       onPressed:
                           // correctName && correctpw && pwcheck && correctEmail

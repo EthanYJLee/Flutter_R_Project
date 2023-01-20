@@ -157,6 +157,7 @@ class _LoginState extends State<Login> {
 
   Widget _loginBtn() {
     return SizedBox(
+      height: 50,
       width: Get.width,
       child: ElevatedButton(
         onPressed: () {
@@ -170,7 +171,10 @@ class _LoginState extends State<Login> {
             },
           );
         },
-        child: const Text('로그인'),
+        child: const Text(
+          '로그인',
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
@@ -190,7 +194,7 @@ class _LoginState extends State<Login> {
         child: const Text(
           '비밀번호를 잊으셨나요?',
           style: TextStyle(
-            color: Colors.blue,
+            color: Color.fromARGB(175, 255, 255, 255),
           ),
         ),
       ),
@@ -204,6 +208,7 @@ class _LoginState extends State<Login> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 149, 177, 227),
         body: SingleChildScrollView(
           child: SafeArea(
             child: Padding(
@@ -215,8 +220,8 @@ class _LoginState extends State<Login> {
                   const Text(
                     "Dr. Oh",
                     style: TextStyle(
-                        color: Color(0xFF99CD89),
-                        fontSize: 50,
+                        color: Color.fromARGB(255, 239, 173, 115),
+                        fontSize: 80,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: Get.height / 10),
@@ -227,34 +232,52 @@ class _LoginState extends State<Login> {
                   const SizedBox(height: 10),
                   _loginBtn(),
                   const SizedBox(height: 20),
-                  const Text('또는'),
-                  const SizedBox(height: 30),
-                  TextButton(
-                    onPressed: () {
-                      signInWithGoogle();
-                    },
-                    child: const Text(
-                      '구글로 계속하기',
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // API연동전 임시 Text
                   const Text(
-                    '카카오로 계속하기',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
+                    '또는',
+                    style: TextStyle(fontSize: 18),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          signInWithGoogle();
+                        },
+                        child: const Text(
+                          '구글로 계속하기',
+                          style: TextStyle(
+                              color: Color.fromARGB(175, 255, 255, 255),
+                              fontSize: 18),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          '카카오로 계속하기',
+                          style: TextStyle(
+                              color: Color.fromARGB(175, 255, 255, 255),
+                              fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // const SizedBox(height: 20),
+                  // API연동전 임시 Text
+                  // const Text(
+                  //   '카카오로 계속하기',
+                  //   style: TextStyle(
+                  //     color: Color.fromARGB(175, 255, 255, 255),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
                         '계정이 없으신가요?',
+                        style: TextStyle(fontSize: 16),
                       ),
                       TextButton(
                         onPressed: () {
@@ -268,8 +291,8 @@ class _LoginState extends State<Login> {
                         child: const Text(
                           '가입하기',
                           style: TextStyle(
-                            color: Colors.blue,
-                          ),
+                              color: Color.fromARGB(175, 255, 255, 255),
+                              fontSize: 16),
                         ),
                       ),
                     ],

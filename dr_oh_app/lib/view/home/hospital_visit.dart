@@ -18,29 +18,33 @@ class _HospitalVisitState extends State<HospitalVisit> {
   int value = 0;
   List<String> purposeGroup = ['진료', '처방', '검진'];
   String selectedPurpose = '진료';
-  late String id = '';
-  late String docId = '';
-
-  _getDocId(String id) async {
-    var data = await FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: id)
-        .get();
-    docId = data.docs.first.id;
-  }
-
-  _initSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      id = prefs.getString('id').toString();
-    });
-    _getDocId(id);
-  }
+  String? _id;
+  String? _docId;
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
+  }
+
+  Future<void> _getDocId(String id) async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: id)
+        .get();
+    setState(() {
+      _docId = data.docs.first.id;
+      print(_docId);
+    });
+  }
+
+  _initSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _id = prefs.getString('id')!;
+      print(_id);
+    });
+    _getDocId(_id!);
   }
 
   // Desc: 내원 목적 라디오버튼
@@ -56,7 +60,7 @@ class _HospitalVisitState extends State<HospitalVisit> {
       child: Text(
         text,
         style: TextStyle(
-          color: (value == index) ? Colors.green : Colors.black,
+          color: (value == index) ? Colors.deepOrange : Colors.black,
         ),
       ),
     );
@@ -69,15 +73,20 @@ class _HospitalVisitState extends State<HospitalVisit> {
             hospital: doc['hospital'],
             purpose: doc['purpose'],
           )
-        : HospitalVisitModel(date: '', hospital: '', purpose: '');
+        : HospitalVisitModel(
+            date: '',
+            hospital: '',
+            purpose: '',
+          );
     return ListTile(
-      title: hospital.purpose.toString().isNotEmpty
-          ? Row(
+      title: hospital.date.toString().isNotEmpty
+          ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
                   children: [
                     Container(
+                      padding: const EdgeInsets.all(8),
                       width: 350,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -94,13 +103,10 @@ class _HospitalVisitState extends State<HospitalVisit> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        '${hospital.date}\t병원명: ${hospital.hospital}\t내원목적:${hospital.purpose}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                        textAlign: TextAlign.center,
+                        '${hospital.date}\n병원명: ${hospital.hospital}\n내원목적: ${hospital.purpose}',
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign.start,
                       ),
                     ),
                   ],
@@ -124,6 +130,7 @@ class _HospitalVisitState extends State<HospitalVisit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(248, 178, 200, 235),
       appBar: AppBar(
         title: const Text('내원이력'),
         elevation: 1,
@@ -136,7 +143,7 @@ class _HospitalVisitState extends State<HospitalVisit> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(docId)
+                  .doc(_docId)
                   .collection('HospitalVisit')
                   .snapshots(),
               builder: ((context, snapshot) {
@@ -160,48 +167,65 @@ class _HospitalVisitState extends State<HospitalVisit> {
                 );
               }),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                controller: _dateController,
-                readOnly: true,
-                onTap: () {
-                  _showDatePickerPop();
-                },
-                decoration: const InputDecoration(
-                  hintText: '날짜',
-                ),
+            Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: TextField(
+                      controller: _dateController,
+                      readOnly: true,
+                      onTap: () {
+                        _showDatePickerPop();
+                      },
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        hintText: '날짜',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: TextField(
+                      controller: _hospitalController,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        hintText: '병원명',
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('내원 목적'),
+                      _customRadioButton(purposeGroup[0].toString(), 0),
+                      _customRadioButton(purposeGroup[1].toString(), 1),
+                      _customRadioButton(purposeGroup[2].toString(), 2)
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      HospitalVisitModel hospitalVisitModel =
+                          HospitalVisitModel(
+                        hospital: _hospitalController.text,
+                        date: _dateController.text,
+                        purpose: selectedPurpose.toString(),
+                      );
+                      MyHistoryViewModel.to
+                          .addHospital(hospitalVisitModel, _id!);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('추가'),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextField(
-                controller: _hospitalController,
-                decoration: const InputDecoration(
-                  hintText: '병원명',
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text('내원 목적'),
-                _customRadioButton(purposeGroup[0].toString(), 0),
-                _customRadioButton(purposeGroup[1].toString(), 1),
-                _customRadioButton(purposeGroup[2].toString(), 2)
-              ],
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  HospitalVisitModel hospitalVisitModel = HospitalVisitModel(
-                    hospital: _hospitalController.text,
-                    date: _dateController.text,
-                    purpose: selectedPurpose.toString(),
-                  );
-                  MyHistoryViewModel.to.addHospital(hospitalVisitModel, id);
-                  Navigator.pop(context);
-                },
-                child: const Text('추가'))
           ],
         ),
       ),
