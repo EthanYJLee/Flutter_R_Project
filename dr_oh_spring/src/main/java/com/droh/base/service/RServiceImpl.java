@@ -15,7 +15,7 @@ public class RServiceImpl implements RService {
 	//Date: 2023-01-12
 	@Override
 	public void PredictDiabetes(HttpServletRequest request, Model model) throws Exception {
-		request.setCharacterEncodig("utf-8");
+		request.setCharacterEncoding("utf-8");
 		HttpSession session=request.getSession();
 		ServletContext context=session.getServletContext();
 		String path=context.getRealPath("/");
