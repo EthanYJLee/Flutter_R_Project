@@ -23,10 +23,9 @@ class StrokePredict {
     double bmi = weight / (height * height * 0.01 * 0.01);
 
     var url = Uri.parse(
-        // iphone ip
         'http://localhost:8080/stroke?sex=$sex&age=$age&bmi=$bmi&hypertension=$hypertension&heartDisease=$heartDisease&everMarried=$everMarried&workType=$workType&residenceType=$residenceType&smoke=$smoke');
-        // android ip
-        // 'http://192.168.10.213:8080/stroke?sex=$sex&age=$age&bmi=$bmi&hypertension=$hypertension&heartDisease=$heartDisease&everMarried=$everMarried&workType=$workType&residenceType=$residenceType&smoke=$smoke');
+    // android ip
+    // 'http://192.168.10.213:8080/stroke?sex=$sex&age=$age&bmi=$bmi&hypertension=$hypertension&heartDisease=$heartDisease&everMarried=$everMarried&workType=$workType&residenceType=$residenceType&smoke=$smoke');
 
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
@@ -41,7 +40,6 @@ class StrokePredict {
   //Date: 2023-01-11, SangwonKim
   //Desc: 뇌졸중 검사 결과 저장하기
   _saveResult(String result) async {
-    
     // SharedPreferences를 통해 로그인한 사용자 id 가져오기
     final prefs = await SharedPreferences.getInstance();
     String id = prefs.getString('id')!;
@@ -49,7 +47,7 @@ class StrokePredict {
 
     // Stroke 데이타 업데이트하기
     FirebaseFirestore.instance.collection('result').add({
-      'result': (double.parse(result)*100).toString(),
+      'result': (double.parse(result) * 100).toString(),
       'userid': id,
       'date': date,
       'category': '뇌졸중'

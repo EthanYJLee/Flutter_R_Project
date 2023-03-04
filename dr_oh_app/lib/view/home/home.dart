@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Color.fromARGB(255, 239, 173, 115),
+          color: const Color.fromARGB(255, 239, 173, 115),
         ),
         width: Get.width,
         height: 30,
@@ -197,10 +197,10 @@ class _HomeState extends State<Home> {
                         return Container(
                           height: 140,
                           width: 160,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           child: Card(
                             elevation: 2,
-                            color: Color.fromARGB(255, 239, 173, 115),
+                            color: const Color.fromARGB(255, 239, 173, 115),
                             child: InkWell(
                               onTap: () {
                                 showDialog(
@@ -273,7 +273,7 @@ class _HomeState extends State<Home> {
     return ListTile(
         title: Text(
       '${user.name}님 건강한 하루 되세요',
-      style: TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     ));
   }
@@ -335,10 +335,10 @@ class _HomeState extends State<Home> {
           onPressed: () {
             Get.to(page);
           },
-          style: ElevatedButton.styleFrom(fixedSize: Size(100, 50)),
+          style: ElevatedButton.styleFrom(fixedSize: const Size(100, 50)),
           child: Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
       ],
@@ -349,7 +349,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(175, 105, 152, 234),
+      backgroundColor: const Color.fromARGB(175, 105, 152, 234),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('HOME'),

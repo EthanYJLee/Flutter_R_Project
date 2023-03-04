@@ -33,6 +33,7 @@ class _DementiaPersonalState extends State<DementiaPersonal> {
   late List<bool> _selectedGender;
   final PageController _nextController = PageController();
   final TextEditingController ageController = TextEditingController();
+  late double _selectedAge = 50;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _DementiaPersonalState extends State<DementiaPersonal> {
             padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
             child: Center(
               child: //-------2nd page(설문 시작 전 질문 사항) 이건 당뇨, 뇌졸중이랑 다른 부분이라 따로 위젯을 안뺐음(필요하면 뺌) --------
-    
+
                   Column(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -68,30 +69,31 @@ class _DementiaPersonalState extends State<DementiaPersonal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Text(
-                        '검사 시행 전 검사를 받는 분의\n교육 수준을 파악하기 위해\n아래와 같은 정보를 입력해 주시기\n바랍니다.',
+                        '검사 시행 전 검사를 받는 분의\n기본 정보를 파악하기 위해\n아래와 같은 정보를\n입력해 주시기 바랍니다.',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF5B9D46)),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: TextField(
-                          controller: ageController,
-                          decoration: const InputDecoration(hintText: '나이'),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() {
-                              DementiaAnswerFinal.age = ageController.text;
-                            });
-                          },
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(30.0),
+                      //   child: TextField(
+                      //     controller: ageController,
+                      //     decoration: const InputDecoration(hintText: '나이'),
+                      //     keyboardType: TextInputType.number,
+                      //     onChanged: (value) {
+                      //       setState(() {
+                      //         DementiaAnswerFinal.age = ageController.text;
+                      //       });
+                      //     },
+                      //   ),
+                      // ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -108,6 +110,20 @@ class _DementiaPersonalState extends State<DementiaPersonal> {
                               },
                             ),
                           ),
+                          Slider(
+                              value: _selectedAge,
+                              min: 20,
+                              max: 120,
+                              divisions: 100,
+                              activeColor:
+                                  const Color.fromARGB(255, 96, 139, 109),
+                              label: _selectedAge.round().toStringAsFixed(0),
+                              onChanged: ((value) {
+                                setState(() {
+                                  ageController.text = value.toString();
+                                  _selectedAge = value.toDouble();
+                                });
+                              })),
                           const SizedBox(
                             height: 30,
                           ),

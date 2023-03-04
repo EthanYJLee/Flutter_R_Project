@@ -3,6 +3,7 @@ import 'package:dr_oh_app/components/logout_btn.dart';
 import 'package:dr_oh_app/model/user.dart';
 import 'package:dr_oh_app/repository/localdata/user_repository.dart';
 import 'package:dr_oh_app/view/home/body_info.dart';
+import 'package:dr_oh_app/view/home/checkup_calendar.dart';
 
 import 'package:dr_oh_app/view/mypage/chart_dementia_test.dart';
 import 'package:dr_oh_app/view/mypage/chart_diabetes.dart';
@@ -414,8 +415,8 @@ class _MyPageState extends State<MyPage> {
                         children: [
                           _gridCard(
                               Icons.person_rounded, '신체정보', const BodyInfo()),
-                          _gridCard(
-                              Icons.local_hospital, '검진기록', const HosMedView()),
+                          _gridCard(Icons.local_hospital, '검진기록',
+                              const CheckupCalendar()),
                           _gridCard(
                               Icons.medication, '내원/투약이력', const HosMedView()),
                         ],

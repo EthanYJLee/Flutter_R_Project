@@ -41,7 +41,7 @@ class _CustomRadioState extends State<CustomRadio> {
     return Container(
       height: 50,
       width: 85,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: OutlinedButton(
         onPressed: () {
           setState(() {
@@ -52,7 +52,9 @@ class _CustomRadioState extends State<CustomRadio> {
         child: Text(
           text,
           style: TextStyle(
-              color: (value == index) ? Colors.green : Colors.black,
+              color: (value == index)
+                  ? const Color.fromARGB(255, 209, 114, 32)
+                  : Colors.black,
               fontSize: 12),
         ),
       ),

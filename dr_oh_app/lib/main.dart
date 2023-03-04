@@ -3,7 +3,7 @@ import 'package:dr_oh_app/view/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 import 'binding/init_bindings.dart';
 import 'firebase_options.dart';
 
@@ -14,7 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  initializeDateFormatting('ko', 'KR').then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
         // Update Date: 2023-01-08, SangwonKim
         // color code 변경: primary > 99CD89
         primarySwatch: ColorService.createMaterialColor(
-            Color.fromARGB(255, 239, 173, 115)),
-        primaryColorDark: Color.fromARGB(153, 190, 97, 15),
-        primaryColorLight: Color.fromARGB(255, 246, 191, 143),
+            const Color.fromARGB(255, 239, 173, 115)),
+        primaryColorDark: const Color.fromARGB(153, 190, 97, 15),
+        primaryColorLight: const Color.fromARGB(255, 246, 191, 143),
         // Date: 2023-01-07, SangwonKim
         // Desc: app바 테마 설정
         appBarTheme: AppBarTheme(

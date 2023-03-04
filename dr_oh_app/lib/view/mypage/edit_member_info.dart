@@ -280,7 +280,7 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: Color.fromARGB(253, 148, 183, 243),
+        backgroundColor: const Color.fromARGB(253, 148, 183, 243),
         appBar: AppBar(
           centerTitle: true,
           title: const Text('회원정보 수정'),
@@ -292,6 +292,9 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(
+                  height: 100,
+                ),
                 Container(
                   width: 350,
                   padding: const EdgeInsets.all(20),
@@ -359,16 +362,10 @@ class _EditMemberInfoState extends State<EditMemberInfo> {
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0),
                   child: ElevatedButton(
-                      onPressed:
-                          // correctName && correctpw && pwcheck && correctEmail
-                          //     ? () {
-                          //         _dialog();
-                          //       }
-                          //     : null,
-                          () {
+                      onPressed: () {
                         correctName && correctpw && pwcheck && correctEmail
                             ? _dialog()
-                            : null;
+                            : SnackBar(content: Text('입력하신 정보를 확인해주세요'));
                       },
                       child: const Text('수정')),
                 )

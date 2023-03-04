@@ -49,6 +49,8 @@ dependencies:
   fl_chart: ^0.55.2 # chart
   google_maps_flutter: ^2.2.3
   line_chart: ^1.0.9
+  table_calendar: ^3.0.8
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

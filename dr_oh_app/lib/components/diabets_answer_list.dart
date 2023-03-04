@@ -191,6 +191,7 @@ class _FourthAState extends State<FourthA> {
       children: [
         const Text(
           '고혈압',
+          style: TextStyle(fontSize: 12),
         ),
         Checkbox(
           value: DiabetesMessage.highbp,
@@ -207,6 +208,7 @@ class _FourthAState extends State<FourthA> {
         ),
         const Text(
           '뇌졸중',
+          style: TextStyle(fontSize: 12),
         ),
         Checkbox(
           value: DiabetesMessage.stroke,
@@ -223,6 +225,7 @@ class _FourthAState extends State<FourthA> {
         ),
         const Text(
           '심장 질환',
+          style: TextStyle(fontSize: 12),
         ),
         Checkbox(
           value: DiabetesMessage.hdattack,
@@ -239,6 +242,7 @@ class _FourthAState extends State<FourthA> {
         ),
         const Text(
           '해당 없음',
+          style: TextStyle(fontSize: 12),
         ),
         Checkbox(
           value: fourth,
@@ -286,13 +290,13 @@ class _FifthAState extends State<FifthA> {
             controller: DiabetesMessage.physhealth,
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              if(value.isEmpty){
+              if (value.isEmpty) {
                 setState(() {
-                  DiabetesMessage.isComplete=false;
+                  DiabetesMessage.isComplete = false;
                 });
-              } else{
+              } else {
                 setState(() {
-                  DiabetesMessage.isComplete=true;
+                  DiabetesMessage.isComplete = true;
                 });
               }
             },

@@ -91,7 +91,6 @@ class _DementiaSurveySecondState extends State<DementiaSurveySecond> {
                   DementiaAnswerFinal.wage1,
                   DementiaAnswerFinal.gender1,
                 );
-                print('totaltotla');
                 print(DementiaAnswerFinal.total);
                 String resultReg = await predictReg.predict(
                   int.parse(DementiaAnswerFinal.age),
